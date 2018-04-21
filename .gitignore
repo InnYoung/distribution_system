@@ -6,3 +6,8 @@ pj_folder/pj_folder/__pycache__/wsgi.cpython-34.pyc
 pj_folder/tiger_distribution/__pycache__/__init__.cpython-34.pyc
 pj_folder/tiger_distribution/__pycache__/tests.cpython-34.pyc
 pj_folder/tiger_distribution/__pycache__/views.cpython-34.pyc
+pj_folder/tiger_distribution/migrations/__pycache__/__init__.cpython-34.pyc
+pj_folder/tiger_distribution/migrations/__pycache__/0002_item_text.cpython-34.pyc
+pj_folder/tiger_distribution/migrations/__pycache__/0001_initial.cpython-34.pyc
+pj_folder/tiger_distribution/__pycache__/models.cpython-34.pyc
+pj_folder/tiger_distribution/__pycache__/admin.cpython-34.pyc
