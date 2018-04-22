@@ -5,8 +5,9 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 import unittest
+from django.test import LiveServerTestCase
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Chrome()
@@ -21,7 +22,7 @@ class NewVisitorTest(unittest.TestCase):
         self.assertIn(row_text, [row.text for row in rows])
 
     def test_home_page(self):
-        self.browser.get("http://localhost:8000")
+        self.browser.get(self.live_server_url)
 
         # 验证首页title包含Tiger
         self.assertIn('tiger_distribution', self.browser.title)
@@ -31,10 +32,13 @@ class NewVisitorTest(unittest.TestCase):
         self.assertEqual(inputbox.get_attribute('placeholder'), 'Enter a to-do item')
 
         # 输入“TigerTest1”，回车后页面更新，显示“1: TigerTest1”
+        # 重定向到新url
         inputbox.send_keys('TigerTest1')
         sleep(2)
         inputbox.send_keys(Keys.ENTER)
 
+        tiger_list_url = self.browser.current_url
+        self.assertRegex(tiger_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1: TigerTest1')
 
         # 页面又显示一个文本框
@@ -52,11 +56,12 @@ class NewVisitorTest(unittest.TestCase):
 
         self.fail('finish the test')
         
+# 新用户tiger2访问页面
+
+# 新页面
+# tiger1信息查看不到
+
+# tiger2输入TigerTest3,TigerTest3回车
+# 
 
 
-# 登录失败
-
-# 登录成功，跳转到用户中心界面
-
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')

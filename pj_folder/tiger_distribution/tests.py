@@ -24,8 +24,36 @@ class HomePageTest(TestCase):
         request.POST['item_text'] = 'TigerTest1'
 
         response = home(request)
-        expected_html = render_to_string('home.html', {'new_item_text': 'TigerTest1'})
-        self.assertEqual(response.content.decode(), expected_html)
+
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, 'TigerTest1')
+        
+
+    def test_home_page_redirects_after_POST(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['item_text'] = 'TigerTest1'
+
+        response = home(request)
+        
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+
+    def test_home_page_only_saves_item_when_neccessary(self):
+        request = HttpRequest()
+        home(request)
+        self.assertEqual(Item.objects.count(), 0)
+
+    def test_home_page_display_all_list_items(self):
+        Item.objects.create(text='Tiger1')
+        Item.objects.create(text='Tiger2')
+
+        request = HttpRequest()
+        response = home(request)
+
+        self.assertIn('Tiger1', response.content.decode())
+        self.assertIn('Tiger2', response.content.decode())
 
 class ItemModeTest(TestCase):
 
