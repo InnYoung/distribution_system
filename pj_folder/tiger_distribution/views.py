@@ -5,9 +5,11 @@ from tiger_distribution.models import Item
 # Create your views here.
 def home(request):
     if request.method == 'POST':
-        new_item_text = request.POST['item_text']
-        Item.objects.create(text=new_item_text)
-        return redirect('/')
-    
+        Item.objects.create(text=request.POST['item_text'])
+        return redirect('/lists/id/')  
     items = Item.objects.all()
-    return render(request, 'home.html', {'items': items})
+    return render(request, 'home.html')
+
+def view_list(request):
+    items = Item.objects.all()
+    return render(request, 'list.html', {'items': items})

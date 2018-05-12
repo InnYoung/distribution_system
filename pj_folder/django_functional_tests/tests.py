@@ -37,8 +37,8 @@ class NewVisitorTest(LiveServerTestCase):
         sleep(2)
         inputbox.send_keys(Keys.ENTER)
 
-        tiger_list_url = self.browser.current_url
-        self.assertRegex(tiger_list_url, '/lists/.+')
+        tiger1_list_url = self.browser.current_url
+        self.assertRegex(tiger1_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1: TigerTest1')
 
         # 页面又显示一个文本框
@@ -51,17 +51,41 @@ class NewVisitorTest(LiveServerTestCase):
         self.check_for_row_in_list_table('1: TigerTest1')
         self.check_for_row_in_list_table('2: TigerTest2')
 
+        # 新用户tiger2访问页面
+        self.browser.quit()
+        self.browser = webdriver.Chrome()
 
-        # 输入“TigerTest2”，回车后页面更新，添加“TigerTest2”
+        # 打开新页面,tiger1信息查看不到
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('TigerTest', page_text)
+        
+        # tiger2输入TigerTest3回车
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('TigerTest3')
+        inputbox.send_keys(Keys.ENTER)
+        sleep(2)
+
+        # 列表更新，出现TigerTest3
+        self.check_for_row_in_list_table('1: TigerTest3')
+
+        # 获得tiger2唯一url
+        tiger2_list_url = self.browser.current_url
+
+        # 访问tiger1的url，显示已存item
+        self.browser.quit()
+        self.browser = webdriver.Chrome()
+        self.browser.get(tiger1_list_url)
+        self.check_for_row_in_list_table('1: TigerTest1')
+        self.check_for_row_in_list_table('2: TigerTest2')
+
+        # 访问tiger2的url
+        self.browser.quit()
+        self.browser = webdriver.Chrome()
+        self.browser.get(tiger2_list_url)
+        self.check_for_row_in_list_table('1: TigerTest3')
+
 
         self.fail('finish the test')
-        
-# 新用户tiger2访问页面
-
-# 新页面
-# tiger1信息查看不到
-
-# tiger2输入TigerTest3,TigerTest3回车
-# 
-
+    
 

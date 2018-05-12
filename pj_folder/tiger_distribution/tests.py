@@ -38,22 +38,37 @@ class HomePageTest(TestCase):
         response = home(request)
         
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
+        self.assertEqual(response['location'], '/lists/id/')
 
     def test_home_page_only_saves_item_when_neccessary(self):
         request = HttpRequest()
         home(request)
         self.assertEqual(Item.objects.count(), 0)
 
-    def test_home_page_display_all_list_items(self):
-        Item.objects.create(text='Tiger1')
-        Item.objects.create(text='Tiger2')
+    # def test_home_page_display_all_list_items(self):
+    #     Item.objects.create(text='Tiger1')
+    #     Item.objects.create(text='Tiger2')
 
-        request = HttpRequest()
-        response = home(request)
+    #     request = HttpRequest()
+    #     response = home(request)
 
-        self.assertIn('Tiger1', response.content.decode())
-        self.assertIn('Tiger2', response.content.decode())
+    #     self.assertIn('Tiger1', response.content.decode())
+    #     self.assertIn('Tiger2', response.content.decode())
+
+class ListViewTest(TestCase):
+
+    def test_displays_all_items(self):
+        Item.objects.create(text='Tiger3')
+        Item.objects.create(text='Tiger4')
+
+        response = self.client.get('/lists/id/')
+
+        self.assertContains(response, 'Tiger3')
+        self.assertContains(response, 'Tiger4')
+
+    def test_uses_list_template(self):
+        response = self.client.get('/lists/id/')
+        self.assertTemplateUsed(response, 'list.html')
 
 class ItemModeTest(TestCase):
 
